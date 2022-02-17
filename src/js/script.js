@@ -32,7 +32,11 @@
       const thisBooksList = this;
       thisBooksList.bookContainer = document.querySelector('.books-list');
     }
-         
+
+    initData(){
+        const thisBooksList = this;
+        thisBooksList.data = dataSource.books;
+    }    
     // Dodaj nową funkcję render.
     render(){
       const thisBooksList = this;
