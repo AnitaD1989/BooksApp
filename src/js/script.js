@@ -38,6 +38,7 @@
       const thisBooksList = this;
       thisBooksList.data = dataSource.books;
       thisBooksList.favoriteBooks = [];
+      thisBooksList.filters = [];
     }    
     // Dodaj nową funkcję render.
     render(){
@@ -71,6 +72,7 @@
 
     bookImage.addEventListener('dbclick', function(event){
       event.preventDefault();
+      const bookImage = event.target.offsetParent;
       const id = bookImage.getAttribute('data-id');
 
 
