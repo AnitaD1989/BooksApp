@@ -1,5 +1,6 @@
 /* global utils, dataSource */ // eslint-disable-line no-unused-vars
 
+
 {    
   'use strict';
   // Przygotuj referencję do szablonu oraz listy .books-list
@@ -91,22 +92,21 @@
 
     bookFilter.addEventListener('click', function(callback){
       const clickedElm = callback.target;
-        //sprawdzamy czy jest input jest zaznaczony "checked"
-        if (clickedElm.tagName == 'INPUT' && clickedElm.type == 'checkbox' && clickedElm.name =='filter'){
-            if (clickedElm.checked == true){
-              //dodajemy value do tablicy filters
-              bookFilter.push(clickedElm.value);
+      //sprawdzamy czy jest input jest zaznaczony "checked"
+      if (clickedElm.tagName == 'INPUT' && clickedElm.type == 'checkbox' && clickedElm.name =='filter'){
+        if (clickedElm.checked == true){
+          //dodajemy value do tablicy filters
+          bookFilter.push(clickedElm.value);
               
-              //Jeśli jest za to odznaczony, to musimy go z takiej tablicy usunąć.
-              }else {
+          //Jeśli input jest za to odznaczony, to musimy go z takiej tablicy usunąć.
+        } else {
+          bookFilter.remove('Input');
                  
 
-            }
         }
-        
-
+      }
     });
-
   }
+  
   BooksList();
 }
