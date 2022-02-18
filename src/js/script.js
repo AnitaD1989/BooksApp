@@ -10,7 +10,7 @@
     },
      
     containerOf: {
-      bookFilter: '.filters',
+      bookFilters: '.filters',
       bookList: '.books-list',
       bookImage: '.book-image',
     },
@@ -84,6 +84,26 @@
       else{
         bookImage.classList.remove('favorite');
       }
+
+    });
+
+    const bookFilter = element.document.querySelector(select.containerOf.bookFilters);
+
+    bookFilter.addEventListener('click', function(callback){
+      const clickedElm = callback.target;
+        //sprawdzamy czy jest input jest zaznaczony "checked"
+        if (clickedElm.tagName == 'INPUT' && clickedElm.type == 'checkbox' && clickedElm.name =='filter'){
+            if (clickedElm.checked == true){
+              //dodajemy value do tablicy filters
+              bookFilter.push(clickedElm.value);
+              
+              //Jeśli jest za to odznaczony, to musimy go z takiej tablicy usunąć.
+              }else {
+                 
+
+            }
+        }
+        
 
     });
 
