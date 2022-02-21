@@ -29,13 +29,6 @@
       thisBooksList.initActions();
     }
 
-    getElements(){
-      const thisBooksList = this;
-      thisBooksList.dom = {};
-      thisBooksList.dom.container = document.querySelector(select.containerOf.bookList);
-      thisBooksList.dom.form = document.querySelector(select.containerOf.form);
-    }
-
     initData(){
       const thisBooksList = this;
       thisBooksList.data = dataSource.books;
@@ -68,30 +61,14 @@
      
     }
 
-    filterBooks() {
+    getElements(){
       const thisBooksList = this;
-            
-      //Wewnątrz niej przejdź po każdym elemencie z dataSource.books
-      for (let book of dataSource.books){
-        let shouldBeHidden = false;
-
-        for(const filter of thisBooksList.filters) {
-          if(book.details[filter]) {
-            shouldBeHidden = true;
-            break;
-          }
-        }
-
-        const bookImage = document.querySelector('.book__image[data-id="' + book.id + '"]');
-        if(shouldBeHidden) {
-          bookImage.classList.add('hidden');
-        } else {
-          bookImage.classList.remove('hidden');
-        }
-      }
-     
+      thisBooksList.dom = {};
+      thisBooksList.dom.container = document.querySelector(select.containerOf.bookList);
+      thisBooksList.dom.form = document.querySelector(select.containerOf.form);
     }
 
+    
     initActions() {
       const thisBooksList = this;
 
@@ -154,6 +131,31 @@
         thisBooksList.filterBooks();
       });
     }
+
+    filterBooks() {
+      const thisBooksList = this;
+            
+      //Wewnątrz niej przejdź po każdym elemencie z dataSource.books
+      for (let book of dataSource.books){
+        let shouldBeHidden = false;
+
+        for(const filter of thisBooksList.filters) {
+          if(book.details[filter]) {
+            shouldBeHidden = true;
+            break;
+          }
+        }
+
+        const bookImage = document.querySelector('.book__image[data-id="' + book.id + '"]');
+        if(shouldBeHidden) {
+          bookImage.classList.add('hidden');
+        } else {
+          bookImage.classList.remove('hidden');
+        }
+      }
+     
+    }
+
           
 
     determineRatingBgc(rating){
@@ -170,5 +172,5 @@
     }
     
   }
-  new BooksList();
+  const app= new BooksList();
 }
