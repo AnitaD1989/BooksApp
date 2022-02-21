@@ -12,6 +12,7 @@
       bookFilters: '.filters',
       bookList: '.books-list',
       bookImage: '.book__image',
+      form: '.filters',
     },
   };
 
@@ -30,7 +31,9 @@
 
     getElements(){
       const thisBooksList = this;
-      thisBooksList.bookContainer = document.querySelector(select.containerOf.bookList);
+      thisBooksList.dom = {};
+      thisBooksList.dom.container = document.querySelector(select.containerOf.bookList);
+      thisBooksList.dom.form = document.querySelector(select.containerOf.form);
     }
 
     initData(){
@@ -43,22 +46,24 @@
     render(){
       const thisBooksList = this;
             
-      //Wewnątrz niej przejdź po każdym elemencie z dataSource.books
-      for (let book of dataSource.books){
-        //Odnajdź funkcję render i w pętli, która przechodzi po każdym produkcie, przygotuj stałą ratingBgc, która będzie równa temu, co zwróci determineRatingBgc dla rating danej książki.
-        const ratingBgc = thisBooksList.determineRatingBgc(book.rating);
-        console.log('ratingBgc', ratingBgc);
+      const thisBookList = this;
+      for (let book of thisBookList.data){
+        const ratingBgc = thisBookList.determineRatingBgc(book.rating);
         book.ratingBgc = ratingBgc;
 
+        const ratingWidth = book.rating * 10;
+        book.ratingWidth = ratingWidth;
         const generatedHTML = templates.books(book);
-        const bookElem = utils.createDOMFromHTML(generatedHTML);
-        thisBooksList.bookContainer.appendChild(bookElem);
+        thisBooksList.bookElem = utils.createDOMFromHTML(generatedHTML);
+        const bookListContainer = document.querySelector(select.containerOf.bookList);
+        bookListContainer.appendChild(thisBooksList.bookElem);
       }
       
       /* make a new constant widthRating which determine width rating */
-
-      const ratingWidth = thisBooksList.book.rating * 10; //jesli rating = 5 to width = 50 wiec mnozymy 10
-      thisBooksList.book.ratingWidth = ratingWidth; 
+      const ratingBgc = thisBooksList.determineRatingBgc(book.rating);
+      bookData.ratingBgc = ratingBgc;
+      const ratingWidth =book.rating * 10; 
+      book.ratingWidth = ratingWidth; 
 
      
     }
@@ -89,50 +94,67 @@
 
     initActions() {
       const thisBooksList = this;
-  
-      const bookImages = thisBooksList.bookContainer.querySelectorAll(select.containerOf.bookImage);
-      console.log(bookImages);
-      for(const elem of bookImages) {
-        elem.addEventListener('dblclick', function(event){
 
-          event.preventDefault();
-          const bookElem = event.target.offsetParent;
-          const id = elem.getAttribute('data-id');
-    
-          if (!thisBooksList.favoriteBooks.includes(id)){
-            thisBooksList.favoriteBooks.push(id);
-            bookElem.classList.add('favorite');
-          }
-          else{
-            const index = thisBooksList.favoriteBooks.indexOf(id);
-            thisBooksList.favoriteBooks.splice(index, 1);
-            bookElem.classList.remove('favorite');
-          }
-    
-        });
-      }
-  
+      thisBooksList.dom.container.addEventListener('dbclick', function(event){
       
-      const bookFilter = document.querySelector(select.containerOf.bookFilters);
-  
-      bookFilter.addEventListener('click', function(e){
-        const clickedElm = e.target;
-        //sprawdzamy czy jest input jest zaznaczony "checked"
-        if (clickedElm.tagName == 'INPUT' && clickedElm.type == 'checkbox' && clickedElm.name =='filter'){
-          if (clickedElm.checked == true){
-            //dodajemy value do tablicy filters
-            thisBooksList.filters.push(clickedElm.value);
-      
-            //Jeśli input jest za to odznaczony, to musimy go z takiej tablicy usunąć.
+        event.preventDefault();
+        
+        /* check if clicked element is a image */
+        const clickedElm = event.target.offsetParent;
+
+        if (clickedElm.classList.contains('book_image')){
+
+          /* get book id by a clicked image */
+          const idBook = clickedElm.getAttribute('data-id');
+
+          /* Check if clicked image is already in favoriteBooks array*/
+          if (thisBooksList.favoriteBooks.includes(idBook)){
+
+            /* If is, remove class favorite from the clicked image */
+            clickedElm.classList.remove('favorite');
+
+            /* Find an IndexOf idBook which need to be removed in favoriteBooks array */
+            const indexOfRemovedBook = thisBooksList.favoriteBooks.indexOf(idBook);
+
+            /* Remove a idBook from a favoriteBooks array */
+            thisBooksList.favoriteBooks.splice(indexOfRemovedBook, 1);
+          
+          /* If isn't, add class favorite to the clicked image */
           } else {
-            const index = thisBooksList.filters.indexOf(clickedElm.value);
-            thisBooksList.filters.splice(index, 1);    
+            clickedElm.classList.add('favorite');
+            thisBooksList.favoriteBooks.push('idBook');
           }
-
-          thisBooksList.filterBooks();
         }
       });
+
+      /* add event listener  to the form */
+
+      thisBooksList.dom.form.addEventListener('click', function(event){
+
+        /* check if clicked element is a checkbox */
+
+        const clickedElement = event.target;
+
+        if(clickedElement.tagName == 'INPUT' && clickedElement.type == 'checkbox' && clickedElement.name == 'filter'){
+
+          /* check if clicked element is checked */
+
+          const value = clickedElement.value;
+          if(clickedElement.checked){
+            thisBooksList.filters.push(value);
+  
+        
+          } else {
+            /* else add value to the filters array */
+
+            const indexOfRemoveValue = thisBooksList.filters.indexOf(value);
+            thisBooksList.filters.splice(indexOfRemoveValue, 1);
+          }
+        }
+        thisBooksList.filterBooks();
+      });
     }
+          
 
     determineRatingBgc(rating){
       if(rating < 6){
